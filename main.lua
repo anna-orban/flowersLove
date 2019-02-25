@@ -6,11 +6,20 @@ function love.load()
         images[image] = love.graphics.newImage('images/'..image..'.png')
     end
     cellSize = 18
-    gridX, gridY = love.graphics.getWidth() / cellSize, love.graphics.getHeight() / cellSize
+    gridX, gridY = math.floor(love.graphics.getWidth() / cellSize), math.floor(love.graphics.getHeight() / cellSize)
 
 end
 
 function love.update()
+    selectedX = math.floor(love.mouse.getX() / cellSize) + 1
+    selectedY = math.floor(love.mouse.getY() / cellSize) + 1
+
+    if selectedX > gridX then
+        selectedX = gridX
+    end
+    if selectedY > gridY then
+        electedY = gridY
+    end
 
 end
 
@@ -20,4 +29,9 @@ function love.draw()
             love.graphics.draw(images.covered, (x - 1) * cellSize, (y - 1) * cellSize)
         end
     end   
+
+    --temp
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.print('selected x: '..selectedX..' selected y: '..selectedY)
+    love.graphics.setColor(1, 1, 1)
 end
