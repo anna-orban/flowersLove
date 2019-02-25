@@ -8,6 +8,21 @@ function love.load()
     cellSize = 18
     gridX, gridY = math.floor(love.graphics.getWidth() / cellSize), math.floor(love.graphics.getHeight() / cellSize)
 
+    grid = {}
+
+    for y = 1, gridY do
+        grid[y] = {}
+        for x = 1, gridX do 
+            grid[y][x] = {
+                flower = false
+            }
+        end
+    end
+
+    -- Temporary
+    grid[1][1].flower = true
+    grid[1][2].flower = true
+
 end
 
 function love.update()
@@ -26,18 +41,19 @@ end
 function love.draw()
     for y = 1, gridY do
         for x = 1, gridX do
-            local image
             if x == selectedX and y == selectedY then
                 if love.mouse.isDown(1) then
-                    image = images.uncovered
+                    drawCell(images.uncovered, x, y)
                 else
-                    image = images.covered_highlighted
+                    drawCell(images.covered_highlighted, x, y)
                 end
             else
-                image = images.covered
+                drawCell(images.covered, x, y)
             end
 
-            love.graphics.draw(image, (x - 1) * cellSize, (y - 1) * cellSize)
+            if grid[y][x].flower then
+                drawCell(images.flower, x, y)
+            end
         end
     end   
 
@@ -45,4 +61,8 @@ function love.draw()
     love.graphics.setColor(0, 0, 0)
     love.graphics.print('selected x: '..selectedX..' selected y: '..selectedY)
     love.graphics.setColor(1, 1, 1)
+end
+
+function drawCell(image, x, y)
+    love.graphics.draw(image, (x-1) * cellSize, (y-1)  * cellSize)
 end
