@@ -53,6 +53,8 @@ function love.draw()
 
             if grid[y][x].flower then
                 drawCell(images.flower, x, y)
+            elseif getSurroundingFlowerCount(x, y) > 0 then
+                drawCell(images[getSurroundingFlowerCount(x, y)], x, y)
             end
         end
     end   
@@ -63,6 +65,25 @@ function love.draw()
     love.graphics.setColor(1, 1, 1)
 end
 
+--temp
+function love.mousereleased(mouseX, mouseY, button)
+    if button == 2 then
+        grid[selectedY][selectedX].flower = not grid[selectedY][selectedX].flower
+    end
+end
+
 function drawCell(image, x, y)
     love.graphics.draw(image, (x-1) * cellSize, (y-1)  * cellSize)
+end
+
+function getSurroundingFlowerCount(x, y)
+    local surroundingFlowerCount = 0
+    for dy = -1, 1 do
+        for dx = -1, 1 do
+            if grid[y + dy] and grid[y + dy][x + dx] and grid[y + dy][x + dx].flower then
+                surroundingFlowerCount = surroundingFlowerCount + 1
+            end
+        end
+    end
+    return surroundingFlowerCount
 end
