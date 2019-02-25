@@ -28,7 +28,11 @@ function love.draw()
         for x = 1, gridX do
             local image
             if x == selectedX and y == selectedY then
-                image = images.covered_highlighted
+                if love.mouse.isDown(1) then
+                    image = images.uncovered
+                else
+                    image = images.covered_highlighted
+                end
             else
                 image = images.covered
             end
