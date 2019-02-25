@@ -26,7 +26,14 @@ end
 function love.draw()
     for y = 1, gridY do
         for x = 1, gridX do
-            love.graphics.draw(images.covered, (x - 1) * cellSize, (y - 1) * cellSize)
+            local image
+            if x == selectedX and y == selectedY then
+                image = images.covered_highlighted
+            else
+                image = images.covered
+            end
+
+            love.graphics.draw(image, (x - 1) * cellSize, (y - 1) * cellSize)
         end
     end   
 
