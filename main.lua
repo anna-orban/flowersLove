@@ -19,9 +19,18 @@ function love.load()
         end
     end
 
-    -- Temporary
-    grid[1][1].flower = true
-    grid[1][2].flower = true
+    possibleFlowrPositions = {}
+
+    for y = 1, gridY do
+        for x = 1, gridX do
+            table.insert(possibleFlowrPositions, {x = x, y = y})
+        end
+    end
+
+    for flowerIndex = 1, 60 do
+        local position = table.remove(possibleFlowrPositions, love.math.random(#possibleFlowrPositions))
+        grid[position.y][position.x].flower = true
+    end
 
 end
 
@@ -70,6 +79,11 @@ function love.mousereleased(mouseX, mouseY, button)
     if button == 2 then
         grid[selectedY][selectedX].flower = not grid[selectedY][selectedX].flower
     end
+end
+
+--temp
+function love.keypressed()
+    love.load()
 end
 
 function drawCell(image, x, y)
