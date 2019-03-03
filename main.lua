@@ -82,7 +82,34 @@ end
 --temp
 function love.mousereleased(mouseX, mouseY, button)
     if button == 1 then
-        grid[selectedY][selectedX].state = 'uncovered'
+        local stack = {
+            {
+                x = selectedX,
+                y = selectedY,
+            }
+        }
+
+        while #stack > 0 do
+            local current = table.remove(stack)
+            local x = current.x
+            local y = current.y
+
+            grid[y][x].state = 'uncovered'
+            if getSurroundingFlowerCount(x, y) == 0 then
+                for dy = -1, 1 do
+                    for dx = -1, 1 do
+                        if not (dx == 0 and dy == 0) and grid[y + dy] and grid[y + dy][x + dx] and grid[y + dy][x + dx].state == 'covered' then
+                            table.insert(
+                                stack, {
+                                    x = x + dx,
+                                    y = y + dy,
+                                }
+                            )
+                        end
+                    end
+                end
+            end
+        end
     end
     -- to be removed
     if button == 2 then
