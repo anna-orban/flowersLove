@@ -70,9 +70,9 @@ function love.draw()
                 end
             end
 
-            if grid[y][x].flower then
+            if grid[y][x].flower and gameOver then
                 drawCell(images.flower, x, y)
-            elseif getSurroundingFlowerCount(x, y) > 0 then
+            elseif getSurroundingFlowerCount(x, y) > 0 and grid[y][x].state == 'uncovered' then
                 drawCell(images[getSurroundingFlowerCount(x, y)], x, y)
             end
 
