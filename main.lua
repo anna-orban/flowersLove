@@ -8,20 +8,7 @@ function love.load()
     cellSize = 18
     gridX, gridY = math.floor(love.graphics.getWidth() / cellSize), math.floor(love.graphics.getHeight() / cellSize)
 
-    grid = {}
-
-    for y = 1, gridY do
-        grid[y] = {}
-        for x = 1, gridX do 
-            grid[y][x] = {
-                flower = false,
-                state = 'covered' -- 'covered', 'uncovered', 'flag', 'question'
-            }
-        end
-    end
-
-    gameOver = false
-    firstClick = true
+    reset()
 end
 
 function love.update()
@@ -71,14 +58,9 @@ function love.draw()
             end
         end
     end   
-
-    --temp
-    love.graphics.setColor(0, 0, 0)
-    love.graphics.print('selected x: '..selectedX..' selected y: '..selectedY)
-    love.graphics.setColor(1, 1, 1)
 end
 
---temp
+
 function love.mousereleased(mouseX, mouseY, button)
     if not gameOver then
         if button == 1  and grid[selectedY][selectedX].state ~= 'flag' then
@@ -97,7 +79,7 @@ function love.mousereleased(mouseX, mouseY, button)
                     grid[position.y][position.x].flower = true
                 end
             end
-            
+
             if grid[selectedY][selectedX].flower and grid[selectedY][selectedX].state == 'uncovered' then
                 gameOver = true
             else    
@@ -156,14 +138,10 @@ function love.mousereleased(mouseX, mouseY, button)
             end
         end
     else 
-        love.load()
+        reset()
     end
 end
 
---temp
-function love.keypressed()
-    love.load()
-end
 
 function drawCell(image, x, y)
     love.graphics.draw(image, (x-1) * cellSize, (y-1)  * cellSize)
@@ -180,3 +158,20 @@ function getSurroundingFlowerCount(x, y)
     end
     return surroundingFlowerCount
 end
+
+function reset()
+        grid = {}
+
+        for y = 1, gridY do
+            grid[y] = {}
+            for x = 1, gridX do 
+                grid[y][x] = {
+                    flower = false,
+                    state = 'covered' -- 'covered', 'uncovered', 'flag', 'question'
+                }
+            end
+        end
+
+        gameOver = false
+        firstClick = true
+    end
