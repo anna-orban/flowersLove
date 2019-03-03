@@ -66,11 +66,13 @@ function love.mousereleased(mouseX, mouseY, button)
         if button == 1  and grid[selectedY][selectedX].state ~= 'flag' then
             if firstClick then
                 firstClick = false
-                possibleFlowrPositions = {}
+                local possibleFlowrPositions = {}
 
                 for y = 1, gridY do
                     for x = 1, gridX do
-                        table.insert(possibleFlowrPositions, {x = x, y = y})
+                        if not (x == selectedX and y == selectedY) then
+                            table.insert(possibleFlowrPositions, {x = x, y = y})
+                        end
                     end
                 end
 
@@ -80,7 +82,8 @@ function love.mousereleased(mouseX, mouseY, button)
                 end
             end
 
-            if grid[selectedY][selectedX].flower and grid[selectedY][selectedX].state == 'uncovered' then
+            if grid[selectedY][selectedX].flower then
+                grid[selectedY][selectedX].state = 'uncovered' 
                 gameOver = true
             else    
                 local stack = {
