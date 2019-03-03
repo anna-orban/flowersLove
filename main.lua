@@ -55,7 +55,7 @@ function love.draw()
             if grid[y][x].state == 'uncovered' then
                 drawCell(images.uncovered, x, y)
             else 
-                if x == selectedX and y == selectedY then
+                if x == selectedX and y == selectedY and not gameOver then
                     if love.mouse.isDown(1) then
                         if grid[y][x].state == 'flag' then
                             drawCell(images.covered, x, y)
@@ -128,10 +128,11 @@ function love.mousereleased(mouseX, mouseY, button)
                 end
 
                 local complete = true
-                for y = 1, gridYCount do
-                    for x = 1, gridXCount do
-                    if grid[y][x].state ~= 'uncovered' and not grid[y][x].flower then
-                        complete = false
+                for y = 1, gridY do
+                    for x = 1, gridX do
+                        if grid[y][x].state ~= 'uncovered' and not grid[y][x].flower then
+                            complete = false
+                        end
                     end
                 end
 
@@ -150,6 +151,8 @@ function love.mousereleased(mouseX, mouseY, button)
                 grid[selectedY][selectedX].state = 'covered'
             end
         end
+    else 
+        love.load()
     end
 end
 
