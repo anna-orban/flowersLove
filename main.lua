@@ -20,20 +20,8 @@ function love.load()
         end
     end
 
-    possibleFlowrPositions = {}
-
-    for y = 1, gridY do
-        for x = 1, gridX do
-            table.insert(possibleFlowrPositions, {x = x, y = y})
-        end
-    end
-
-    for flowerIndex = 1, 60 do
-        local position = table.remove(possibleFlowrPositions, love.math.random(#possibleFlowrPositions))
-        grid[position.y][position.x].flower = true
-    end
-
     gameOver = false
+    firstClick = true
 end
 
 function love.update()
@@ -94,6 +82,22 @@ end
 function love.mousereleased(mouseX, mouseY, button)
     if not gameOver then
         if button == 1  and grid[selectedY][selectedX].state ~= 'flag' then
+            if firstClick then
+                firstClick = false
+                possibleFlowrPositions = {}
+
+                for y = 1, gridY do
+                    for x = 1, gridX do
+                        table.insert(possibleFlowrPositions, {x = x, y = y})
+                    end
+                end
+
+                for flowerIndex = 1, 70 do
+                    local position = table.remove(possibleFlowrPositions, love.math.random(#possibleFlowrPositions))
+                    grid[position.y][position.x].flower = true
+                end
+            end
+            
             if grid[selectedY][selectedX].flower and grid[selectedY][selectedX].state == 'uncovered' then
                 gameOver = true
             else    
