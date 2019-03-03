@@ -14,7 +14,8 @@ function love.load()
         grid[y] = {}
         for x = 1, gridX do 
             grid[y][x] = {
-                flower = false
+                flower = false,
+                state = 'covered'
             }
         end
     end
@@ -50,14 +51,18 @@ end
 function love.draw()
     for y = 1, gridY do
         for x = 1, gridX do
-            if x == selectedX and y == selectedY then
-                if love.mouse.isDown(1) then
-                    drawCell(images.uncovered, x, y)
+            if grid[y][x].state == 'uncovered' then
+                drawCell(images.uncovered, x, y)
+            else 
+                if x == selectedX and y == selectedY then
+                    if love.mouse.isDown(1) then
+                        drawCell(images.uncovered, x, y)
+                    else
+                        drawCell(images.covered_highlighted, x, y)
+                    end
                 else
-                    drawCell(images.covered_highlighted, x, y)
+                    drawCell(images.covered, x, y)
                 end
-            else
-                drawCell(images.covered, x, y)
             end
 
             if grid[y][x].flower then
@@ -76,6 +81,10 @@ end
 
 --temp
 function love.mousereleased(mouseX, mouseY, button)
+    if button == 1 then
+        grid[selectedY][selectedX].state = 'uncovered'
+    end
+    -- to be removed
     if button == 2 then
         grid[selectedY][selectedX].flower = not grid[selectedY][selectedX].flower
     end
