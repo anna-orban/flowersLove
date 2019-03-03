@@ -15,7 +15,7 @@ function love.load()
         for x = 1, gridX do 
             grid[y][x] = {
                 flower = false,
-                state = 'covered'
+                state = 'covered' -- 'covered', 'uncovered', 'flag', 'question'
             }
         end
     end
@@ -70,6 +70,12 @@ function love.draw()
             elseif getSurroundingFlowerCount(x, y) > 0 then
                 drawCell(images[getSurroundingFlowerCount(x, y)], x, y)
             end
+
+            if grid[y][x].state == 'flag' then
+                drawCell(images.flag, x, y)
+            elseif grid[y][x].state == 'question' then
+                drawCell(images.question, x, y)
+            end
         end
     end   
 
@@ -111,9 +117,15 @@ function love.mousereleased(mouseX, mouseY, button)
             end
         end
     end
-    -- to be removed
+
     if button == 2 then
-        grid[selectedY][selectedX].flower = not grid[selectedY][selectedX].flower
+        if grid[selectedY][selectedX].state == 'covered' then
+            grid[selectedY][selectedX].state = 'flag'
+        elseif grid[selectedY][selectedX].state == 'flag' then
+            grid[selectedY][selectedX].state = 'question'
+        elseif grid[selectedY][selectedX].state == 'question' then
+            grid[selectedY][selectedX].state = 'covered'
+        end
     end
 end
 
