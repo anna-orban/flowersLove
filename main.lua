@@ -33,6 +33,7 @@ function love.load()
         grid[position.y][position.x].flower = true
     end
 
+    gameOver = false
 end
 
 function love.update()
@@ -91,45 +92,63 @@ end
 
 --temp
 function love.mousereleased(mouseX, mouseY, button)
-    if button == 1  and grid[selectedY][selectedX].state ~= 'flag' then
-        local stack = {
-            {
-                x = selectedX,
-                y = selectedY,
-            }
-        }
+    if not gameOver then
+        if button == 1  and grid[selectedY][selectedX].state ~= 'flag' then
+            if grid[selectedY][selectedX].flower and grid[selectedY][selectedX].state == 'uncovered' then
+                gameOver = true
+            else    
+                local stack = {
+                    {
+                        x = selectedX,
+                        y = selectedY,
+                    }
+                }
 
-        while #stack > 0 do
-            local current = table.remove(stack)
-            local x = current.x
-            local y = current.y
+                while #stack > 0 do
+                    local current = table.remove(stack)
+                    local x = current.x
+                    local y = current.y
 
-            grid[y][x].state = 'uncovered'
-            if getSurroundingFlowerCount(x, y) == 0 then
-                for dy = -1, 1 do
-                    for dx = -1, 1 do
-                        if not (dx == 0 and dy == 0) and grid[y + dy] and grid[y + dy][x + dx] and 
-                           (grid[y + dy][x + dx].state == 'covered' or grid[y + dy][x + dx].state == 'question') then
-                            table.insert(
-                                stack, {
-                                    x = x + dx,
-                                    y = y + dy,
-                                }
-                            )
+                    grid[y][x].state = 'uncovered'
+                    if getSurroundingFlowerCount(x, y) == 0 then
+                        for dy = -1, 1 do
+                            for dx = -1, 1 do
+                                if not (dx == 0 and dy == 0) and grid[y + dy] and grid[y + dy][x + dx] and 
+                                (grid[y + dy][x + dx].state == 'covered' or grid[y + dy][x + dx].state == 'question') then
+                                    table.insert(
+                                        stack, {
+                                            x = x + dx,
+                                            y = y + dy,
+                                        }
+                                    )
+                                end
+                            end
                         end
                     end
                 end
+
+                local complete = true
+                for y = 1, gridYCount do
+                    for x = 1, gridXCount do
+                    if grid[y][x].state ~= 'uncovered' and not grid[y][x].flower then
+                        complete = false
+                    end
+                end
+
+                if complete then
+                    gameOver = true
+                end
             end
         end
-    end
 
-    if button == 2 then
-        if grid[selectedY][selectedX].state == 'covered' then
-            grid[selectedY][selectedX].state = 'flag'
-        elseif grid[selectedY][selectedX].state == 'flag' then
-            grid[selectedY][selectedX].state = 'question'
-        elseif grid[selectedY][selectedX].state == 'question' then
-            grid[selectedY][selectedX].state = 'covered'
+        if button == 2 then
+            if grid[selectedY][selectedX].state == 'covered' then
+                grid[selectedY][selectedX].state = 'flag'
+            elseif grid[selectedY][selectedX].state == 'flag' then
+                grid[selectedY][selectedX].state = 'question'
+            elseif grid[selectedY][selectedX].state == 'question' then
+                grid[selectedY][selectedX].state = 'covered'
+            end
         end
     end
 end
