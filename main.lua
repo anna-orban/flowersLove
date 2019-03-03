@@ -56,7 +56,11 @@ function love.draw()
             else 
                 if x == selectedX and y == selectedY then
                     if love.mouse.isDown(1) then
-                        drawCell(images.uncovered, x, y)
+                        if grid[y][x].state == 'flag' then
+                            drawCell(images.covered, x, y)
+                        else
+                            drawCell(images.uncovered, x, y)
+                        end
                     else
                         drawCell(images.covered_highlighted, x, y)
                     end
@@ -104,7 +108,8 @@ function love.mousereleased(mouseX, mouseY, button)
             if getSurroundingFlowerCount(x, y) == 0 then
                 for dy = -1, 1 do
                     for dx = -1, 1 do
-                        if not (dx == 0 and dy == 0) and grid[y + dy] and grid[y + dy][x + dx] and grid[y + dy][x + dx].state == 'covered' then
+                        if not (dx == 0 and dy == 0) and grid[y + dy] and grid[y + dy][x + dx] and 
+                           (grid[y + dy][x + dx].state == 'covered' or grid[y + dy][x + dx].state == 'question') then
                             table.insert(
                                 stack, {
                                     x = x + dx,
