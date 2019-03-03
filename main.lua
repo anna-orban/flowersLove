@@ -87,7 +87,7 @@ end
 
 --temp
 function love.mousereleased(mouseX, mouseY, button)
-    if button == 1 then
+    if button == 1  and grid[selectedY][selectedX].state ~= 'flag' then
         local stack = {
             {
                 x = selectedX,
